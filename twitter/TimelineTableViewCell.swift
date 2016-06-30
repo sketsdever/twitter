@@ -15,6 +15,10 @@ class TimelineTableViewCell: UITableViewCell {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var timestampUnitLabel: UILabel!
+    @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var retweetButton: UIButton!
+    
+    static let profileImageTappedNotification = "ProfileImageTappedNotification"
     
     var tweet: Tweet? {
         didSet {
@@ -43,44 +47,106 @@ class TimelineTableViewCell: UITableViewCell {
                     profileImage.image = UIImage(data: imageData)
                 }
             }
+            
+            if tweet?.retweeted == true {
+                retweetButton.setImage(UIImage(named: "retweet_logo_green"), forState: UIControlState.Normal)
+            } else {
+                retweetButton.setImage(UIImage(named: "retweet_logo_gray"), forState: UIControlState.Normal)
+            }
+            
+            if tweet?.favorited == true {
+                favoriteButton.setImage(UIImage(named: "like_logo_red"), forState: UIControlState.Normal)
+            } else {
+                favoriteButton.setImage(UIImage(named: "like_logo_gray"), forState: UIControlState.Normal)
+            }
         }
     }
     
     @IBAction func onRetweetButton(sender: AnyObject) {
-        if let tweetId = tweet?.idString {
-            TwitterClient.sharedInstance.retweet(tweetId, success: { (result: Tweet) in
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.tweet = result
-                    NSNotificationCenter.defaultCenter().postNotificationName(Tweet.retweetNotification, object: result)
+        print("retweet button clicked")
+        if tweet?.retweeted == true {
+            print("unretweet")
+            retweetButton.setImage(UIImage(named: "retweet_logo_grey"), forState: UIControlState.Normal)
+            if let tweetId = tweet?.idString {
+                TwitterClient.sharedInstance.unretweet(tweetId, success: { (result: Tweet) in
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        //self.tweet = result
+                        NSNotificationCenter.defaultCenter().postNotificationName(Tweet.unRetweetNotification, object: result)
+                    }
+                    
+                }) { (error: NSError) in
+                    print(error.localizedDescription)
+                    print(error)
                 }
-                
-            }) { (error: NSError) in
-                print(error.localizedDescription)
-                print(error)
+            }
+        } else {
+            print("retweet")
+            retweetButton.setImage(UIImage(named: "retweet_logo_green"), forState: UIControlState.Normal)
+            if let tweetId = tweet?.idString {
+                TwitterClient.sharedInstance.retweet(tweetId, success: { (result: Tweet) in
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        //self.tweet = result
+                        NSNotificationCenter.defaultCenter().postNotificationName(Tweet.retweetNotification, object: result)
+                    }
+                    
+                }) { (error: NSError) in
+                    print(error.localizedDescription)
+                    print(error)
+                }
             }
         }
     }
     
     @IBAction func onFavoriteButton(sender: AnyObject) {
-        if let tweetId = tweet?.idString {
-            TwitterClient.sharedInstance.favorite(tweetId, success: { (result: Tweet) in
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.tweet = result
-                    NSNotificationCenter.defaultCenter().postNotificationName(Tweet.favoriteNotification, object: result)
+        print("favorite button clicked")
+        if tweet?.favorited == true {
+            print("unfavorite")
+            favoriteButton.setImage(UIImage(named: "like_logo_gray"), forState: UIControlState.Normal)
+            if let tweetId = tweet?.idString {
+                TwitterClient.sharedInstance.favorite(tweetId, success: { (result: Tweet) in
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        //self.tweet = result
+                        NSNotificationCenter.defaultCenter().postNotificationName(Tweet.unFavoriteNotification, object: result)
+                    }
+                    
+                }) { (error: NSError) in
+                    print(error.localizedDescription)
+                    print(error)
                 }
-                
-            }) { (error: NSError) in
-                print(error.localizedDescription)
-                print(error)
+            }
+        } else {
+            print("favorite")
+            favoriteButton.setImage(UIImage(named: "like_logo_red"), forState: UIControlState.Normal)
+            if let tweetId = tweet?.idString {
+                TwitterClient.sharedInstance.unfavorite(tweetId, success: { (result: Tweet) in
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        //self.tweet = result
+                        NSNotificationCenter.defaultCenter().postNotificationName(Tweet.favoriteNotification, object: result)
+                    }
+                    
+                }) { (error: NSError) in
+                    print(error.localizedDescription)
+                    print(error)
+                }
             }
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+        let profileImageTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileImageTapped))
+        profileImage.userInteractionEnabled = true
+        profileImage.addGestureRecognizer(profileImageTapGestureRecognizer)
+        
+    }
+    
+    func profileImageTapped(image: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName(TimelineTableViewCell.profileImageTappedNotification, object: tweet?.user)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42311A561D248F0000296534 /* ComposeTweetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42311A551D248F0000296534 /* ComposeTweetViewController.swift */; };
 		4274BE891D21C0A1006F290F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4274BE881D21C0A1006F290F /* AppDelegate.swift */; };
 		4274BE8E1D21C0A1006F290F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4274BE8C1D21C0A1006F290F /* Main.storyboard */; };
 		4274BE901D21C0A1006F290F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4274BE8F1D21C0A1006F290F /* Assets.xcassets */; };
@@ -19,6 +20,7 @@
 		4274BEBF1D21DF62006F290F /* TwitterClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4274BEBE1D21DF62006F290F /* TwitterClient.swift */; };
 		4274BEC31D21F97C006F290F /* TimelineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4274BEC21D21F97C006F290F /* TimelineTableViewCell.swift */; };
 		42B5A03A1D2370470044AE7D /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B5A0391D2370470044AE7D /* DetailViewController.swift */; };
+		42CC03081D246635003968A6 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CC03071D246635003968A6 /* ProfileViewController.swift */; };
 		42CD46971D23157E0097613A /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CD46961D23157E0097613A /* TimelineViewController.swift */; };
 		519B29A36F6749505FB90291 /* Pods_twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8BFEAE486BDB990FD5BC12C /* Pods_twitter.framework */; };
 		E09F5F08E5071503487BBC2D /* Pods_twitterTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8D6105C7310A448255A7C69 /* Pods_twitterTests.framework */; };
@@ -44,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		2A442D1094D706E23932DB68 /* Pods-twitter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-twitter.debug.xcconfig"; path = "Pods/Target Support Files/Pods-twitter/Pods-twitter.debug.xcconfig"; sourceTree = "<group>"; };
+		42311A551D248F0000296534 /* ComposeTweetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeTweetViewController.swift; sourceTree = "<group>"; };
 		4274BE851D21C0A1006F290F /* twitter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = twitter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4274BE881D21C0A1006F290F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4274BE8D1D21C0A1006F290F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -62,6 +65,7 @@
 		4274BEBE1D21DF62006F290F /* TwitterClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitterClient.swift; sourceTree = "<group>"; };
 		4274BEC21D21F97C006F290F /* TimelineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineTableViewCell.swift; sourceTree = "<group>"; };
 		42B5A0391D2370470044AE7D /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		42CC03071D246635003968A6 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		42CD46961D23157E0097613A /* TimelineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		469312A03B6B092A270FA0E9 /* Pods-twitter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-twitter.release.xcconfig"; path = "Pods/Target Support Files/Pods-twitter/Pods-twitter.release.xcconfig"; sourceTree = "<group>"; };
 		52C91CDECC1BFEFD94A2A884 /* Pods-twitterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-twitterTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-twitterTests/Pods-twitterTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -137,12 +141,14 @@
 			isa = PBXGroup;
 			children = (
 				4274BE8C1D21C0A1006F290F /* Main.storyboard */,
+				42CC03071D246635003968A6 /* ProfileViewController.swift */,
 				4274BE881D21C0A1006F290F /* AppDelegate.swift */,
 				4274BEBE1D21DF62006F290F /* TwitterClient.swift */,
 				4274BEBA1D21D169006F290F /* Tweet.swift */,
 				42B5A0391D2370470044AE7D /* DetailViewController.swift */,
 				4274BEB81D21D15E006F290F /* User.swift */,
 				42CD46961D23157E0097613A /* TimelineViewController.swift */,
+				42311A551D248F0000296534 /* ComposeTweetViewController.swift */,
 				4274BEC21D21F97C006F290F /* TimelineTableViewCell.swift */,
 				4274BEB61D21C19E006F290F /* LoginViewController.swift */,
 				4274BE8F1D21C0A1006F290F /* Assets.xcassets */,
@@ -445,12 +451,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42311A561D248F0000296534 /* ComposeTweetViewController.swift in Sources */,
 				4274BEC31D21F97C006F290F /* TimelineTableViewCell.swift in Sources */,
 				4274BEB91D21D15E006F290F /* User.swift in Sources */,
 				4274BEBB1D21D169006F290F /* Tweet.swift in Sources */,
 				4274BEB71D21C19E006F290F /* LoginViewController.swift in Sources */,
 				42CD46971D23157E0097613A /* TimelineViewController.swift in Sources */,
 				4274BEBF1D21DF62006F290F /* TwitterClient.swift in Sources */,
+				42CC03081D246635003968A6 /* ProfileViewController.swift in Sources */,
 				4274BE891D21C0A1006F290F /* AppDelegate.swift in Sources */,
 				42B5A03A1D2370470044AE7D /* DetailViewController.swift in Sources */,
 			);

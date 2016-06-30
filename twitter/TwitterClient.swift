@@ -94,6 +94,20 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func unretweet(idString: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        //self.printRateStatus()
+        
+        POST("1.1/statuses/unretweet/\(idString).json", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            let tweetDictionary = response as! NSDictionary
+            let tweet = Tweet(dictionary: tweetDictionary)
+            success(tweet)
+            
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
+    
     func favorite(idString: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
         //self.printRateStatus()
         
@@ -108,8 +122,27 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func unfavorite(idString: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        //self.printRateStatus()
+        
+        POST("1.1/favorites/destroy.json?id=\(idString)", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            let tweetDictionary = response as! NSDictionary
+            let tweet = Tweet(dictionary: tweetDictionary)
+            success(tweet)
+            
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
+    
     func reply(reply: String, tweetIdString: String, success: () -> (), failure: (NSError) -> ()) {
-        POST("statuses/update.json?status=\(reply)+?in_reply_to_status_id=\(tweetIdString)", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        
+        print("in reply")
+        
+        POST("1.1/statuses/update.json?status=\(reply)&in_reply_to_status_id=\(tweetIdString)", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            print("finished post")
             
             //let responseDictionary = response as! NSDictionary
             success()
@@ -118,7 +151,19 @@ class TwitterClient: BDBOAuth1SessionManager {
                 failure(error)
         })
     }
-
+    
+    func postTweet(tweetText: String, success: () -> (), failure: (NSError) -> ()) {
+        
+        print("in postTweet")
+        
+        POST("1.1/statuses/update.json?status=\(tweetText)", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            success()
+            
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
     
     func logout() {
         User.currentUser = nil
