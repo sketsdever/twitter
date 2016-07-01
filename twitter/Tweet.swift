@@ -18,6 +18,8 @@ class Tweet: NSObject {
     var idString: String?
     var retweeted: Bool?
     var favorited: Bool?
+    var inReplyToStatusIdStr: String?
+    var retweetedStatus: Tweet?
     
     static let retweetNotification = "RetweetNotification"
     static let unRetweetNotification = "UnRetweetNotification"
@@ -25,9 +27,10 @@ class Tweet: NSObject {
     static let unFavoriteNotification = "UnFavoriteNotification"
     
     init(dictionary: NSDictionary) {
+        
         text = dictionary["text"] as? String
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
-        favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
+        favoritesCount = (dictionary["favorite_count"] as? Int) ?? 0
         
         let userDictionary = dictionary["user"] as? NSDictionary
         if let userDictionary = userDictionary {
@@ -44,6 +47,11 @@ class Tweet: NSObject {
         idString = dictionary["id_str"] as? String
         retweeted = dictionary["retweeted"] as? Bool
         favorited = dictionary["favorited"] as? Bool
+        inReplyToStatusIdStr = dictionary["in_reply_to_status_id_str"] as? String
+        
+        if let retweetedStatusAsDictionary = dictionary["retweeted_status"] as? NSDictionary {
+            self.retweetedStatus = Tweet(dictionary: retweetedStatusAsDictionary)
+        }
     }
     
     class func tweetsWithArray(dictionaries: [NSDictionary]) -> [Tweet] {

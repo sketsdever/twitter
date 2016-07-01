@@ -80,6 +80,19 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    
+    func getTweet(tweetIdString: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
+        GET("1.1/statuses/show.json?id=\(tweetIdString)", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+        
+        let dictionary = response as! NSDictionary
+        let tweet = Tweet(dictionary: dictionary)
+        success(tweet)
+        
+        }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+        failure(error)
+        })
+    }
+    
     func retweet(idString: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
         //self.printRateStatus()
         
@@ -111,6 +124,7 @@ class TwitterClient: BDBOAuth1SessionManager {
     func favorite(idString: String, success: (Tweet) -> (), failure: (NSError) -> ()) {
         //self.printRateStatus()
         
+        print("id = \(idString)")
         POST("1.1/favorites/create.json?id=\(idString)", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
             
             let tweetDictionary = response as! NSDictionary
@@ -165,12 +179,96 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
+    func findReplies(tweet: Tweet, success: ([Tweet]) -> (), failure: (NSError) -> ()) {
+        print("in find replies")
+        
+        if let tweetUserScreenname = tweet.user?.screenname as? String {
+            
+            let queryAsString = "to:\(tweetUserScreenname)"
+            //print("queryAsString: \(queryAsString)")
+            //if let queryAsUrlString = queryAsString.stringByAddingPercentEncodingForRFC3986() {
+                
+                if let sinceId = tweet.idString {
+                    print("sinceId: \(sinceId)")
+                    
+                    var params = ["q" : queryAsString]
+                    params["since_id"] = sinceId
+                    params["result_type"] = "mixed"
+                    // ?q=\(queryAsUrlString)&since_id=\(sinceId)&result_type=mixed
+                    GET("1.1/search/tweets.json", parameters: params, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+                        
+                        var resultsAsTweets: [Tweet] = []
+                        let resultsAsDictionaries = response!["statuses"] as! [NSDictionary]
+                        print("assigned results")
+                        
+                        print("looking for match for tweet \(tweet.idString)")
+                        for dict in resultsAsDictionaries {
+                            let result = Tweet(dictionary: dict)
+                            
+                            print("\(result.user?.screenname)")
+                            print("\(result.inReplyToStatusIdStr)")
+                            
+                            if let replyToStatusIdStr = result.inReplyToStatusIdStr {
+                                if replyToStatusIdStr == tweet.idString {
+                                    resultsAsTweets.append(result)
+                                    print("found a match")
+                                }
+                            }
+                            
+                        }
+                        success(resultsAsTweets)
+
+                        
+                        }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                            failure(error)
+                    })
+                }
+            //}
+        }
+    }
+    
+    func search(query: String, sinceId: String, success: ([NSDictionary]) -> (), failure: (NSError) -> ()) {
+        print("in search")
+        GET("1.1/search/tweets.json?q=\(query)&since_id=\(sinceId)&result_type=mixed", parameters: nil, progress: nil, success: { (task: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            let replies = response as! [NSDictionary]
+            success(replies)
+            
+            }, failure: { (task: NSURLSessionDataTask?, error: NSError) -> Void in
+                failure(error)
+        })
+    }
+    
+    
     func logout() {
         User.currentUser = nil
         deauthorize()
         
         NSNotificationCenter.defaultCenter().postNotificationName(User.userDidLogOutNotification, object: nil)
     }
+    
+    
+    /*search(queryAsUrlString, sinceId: sinceId, success: { (results: [NSDictionary]) in
+     
+     print("completed search?")
+     
+     var resultsAsTweets: [Tweet] = []
+     let resultsAsDictionaries = results as [NSDictionary]
+     print("assigned results")
+     for dict in resultsAsDictionaries {
+     let result = Tweet(dictionary: dict)
+     
+     if result.inReplyToStatusIdStr! == tweet.idString {
+     resultsAsTweets.append(tweet)
+     }
+     
+     }
+     
+     success(resultsAsTweets)
+     
+     }, failure: { (error: NSError) in
+     print(error.localizedDescription)
+     })*/
     
     /*// In the Twitter Client add...
     func getRateStatuses(handler: ((response: AnyObject?, error: NSError?) -> Void)) {

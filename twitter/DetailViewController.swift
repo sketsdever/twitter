@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tweetUserProfileImage: UIImageView!
     @IBOutlet weak var currentUserProfileImage: UIImageView!
@@ -19,13 +19,28 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var replyTextField: UITextField!
     @IBOutlet weak var retweetButton: UIButton!
     @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var favoritesCountLabel: UILabel!
+    @IBOutlet weak var retweetsCountLabel: UILabel!
+    
+    @IBOutlet weak var tableView: UITableView!
     
     var tweet: Tweet?
+    var replies: [Tweet]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if tweet?.retweetedStatus != nil {
+            print("eventually display some sort of bar saying that this is a retweet")
+            tweet = tweet?.retweetedStatus
+        }
+        
+        loadReplies()
+        
         loadData()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
         
         let currentUserProfileTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(currentUserProfileImageTapped))
         currentUserProfileImage.userInteractionEnabled = true
@@ -34,6 +49,31 @@ class DetailViewController: UIViewController {
         let tweetUserProfileTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tweetUserProfileImageTapped))
         tweetUserProfileImage.userInteractionEnabled = true
         tweetUserProfileImage.addGestureRecognizer(tweetUserProfileTapGestureRecognizer)
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction), forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(User.userPostedReplyNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (notification: NSNotification) in
+            
+            print("unretweet notification received in view did load")
+            self.loadReplies()
+        }
+    }
+    
+    func refreshControlAction(refreshControl: UIRefreshControl) {
+        loadReplies()
+        refreshControl.endRefreshing()
+    }
+    
+    func loadReplies() {
+        TwitterClient.sharedInstance.findReplies(tweet!, success: { (result: [Tweet]) in
+            print("got results!!!")
+            self.replies = result
+            self.tableView.reloadData()
+        }) { (error: NSError) in
+            print(error.localizedDescription)
+        }
     }
     
     func loadData() {
@@ -48,6 +88,9 @@ class DetailViewController: UIViewController {
         } else {
             favoriteButton.setImage(UIImage(named: "like_logo_gray"), forState: UIControlState.Normal)
         }
+        
+        favoritesCountLabel.text = "\((tweet?.favoritesCount)!)"
+        retweetsCountLabel.text = "\((tweet?.retweetCount)!)"
         
         tweetTextLabel.text = tweet?.text as? String
         usernameLabel.text = tweet?.user?.name as? String
@@ -100,12 +143,11 @@ class DetailViewController: UIViewController {
         print("retweet button clicked")
         if tweet?.retweeted == true {
             print("unretweet")
-            //retweetButton.setImage(UIImage(named: "retweet_logo_grey"), forState: UIControlState.Normal)
             if let tweetId = tweet?.idString {
                 TwitterClient.sharedInstance.unretweet(tweetId, success: { (result: Tweet) in
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                        //self.tweet = result
+                        self.tweet = result
                         self.loadData()
                         NSNotificationCenter.defaultCenter().postNotificationName(Tweet.unRetweetNotification, object: result)
                     }
@@ -117,12 +159,11 @@ class DetailViewController: UIViewController {
             }
         } else {
             print("retweet")
-            //retweetButton.setImage(UIImage(named: "retweet_logo_green"), forState: UIControlState.Normal)
             if let tweetId = tweet?.idString {
                 TwitterClient.sharedInstance.retweet(tweetId, success: { (result: Tweet) in
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                        //self.tweet = result
+                        self.tweet = result
                         self.loadData()
                         print(self.tweet)
                         NSNotificationCenter.defaultCenter().postNotificationName(Tweet.retweetNotification, object: result)
@@ -140,12 +181,11 @@ class DetailViewController: UIViewController {
         print("favorite button clicked")
         if tweet?.favorited == true {
             print("unfavorite")
-            //favoriteButton.setImage(UIImage(named: "like_logo_gray"), forState: UIControlState.Normal)
             if let tweetId = tweet?.idString {
-                TwitterClient.sharedInstance.favorite(tweetId, success: { (result: Tweet) in
+                TwitterClient.sharedInstance.unfavorite(tweetId, success: { (result: Tweet) in
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                        //self.tweet = result
+                        self.tweet = result
                         self.loadData()
                         NSNotificationCenter.defaultCenter().postNotificationName(Tweet.unFavoriteNotification, object: result)
                     }
@@ -157,12 +197,11 @@ class DetailViewController: UIViewController {
             }
         } else {
             print("favorite")
-            //favoriteButton.setImage(UIImage(named: "like_logo_red"), forState: UIControlState.Normal)
             if let tweetId = tweet?.idString {
-                TwitterClient.sharedInstance.unfavorite(tweetId, success: { (result: Tweet) in
+                TwitterClient.sharedInstance.favorite(tweetId, success: { (result: Tweet) in
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                        //self.tweet = result
+                        self.tweet = result
                         self.loadData()
                         NSNotificationCenter.defaultCenter().postNotificationName(Tweet.favoriteNotification, object: result)
                     }
@@ -190,6 +229,9 @@ class DetailViewController: UIViewController {
                         
                         TwitterClient.sharedInstance.reply(replyAsUrlString, tweetIdString: tweetId, success: {
                             print("success-ish")
+                            
+                            NSNotificationCenter.defaultCenter().postNotificationName(User.userPostedReplyNotification, object: nil)
+                            
                             }, failure: { (error: NSError) in
                                 print(error.localizedDescription)
                         })
@@ -209,6 +251,7 @@ class DetailViewController: UIViewController {
             let profileViewController = segue.destinationViewController as! ProfileViewController
             profileViewController.user = User.currentUser
             profileViewController.userIsCurrentUser = true
+            profileViewController.comingFromSegue = true
         }
         if segue.identifier == "DetailToTweetUserProfileSegue" {
             let profileViewController = segue.destinationViewController as! ProfileViewController
@@ -218,7 +261,26 @@ class DetailViewController: UIViewController {
             } else {
                 profileViewController.userIsCurrentUser = false
             }
+            profileViewController.comingFromSegue = true
         }
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let replies = replies {
+            return replies.count
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("TimelineTableViewCell", forIndexPath: indexPath) as! TimelineTableViewCell
+        
+        let reply = replies![indexPath.row]
+        cell.tweet = reply
+        cell.inDetailView = true
+        
+        return cell
     }
 
 }

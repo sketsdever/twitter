@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("there is a current user")
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewControllerWithIdentifier("TimelineNavigationController")
+            let vc = storyboard.instantiateViewControllerWithIdentifier("TabBarController")
             self.window?.rootViewController = vc
         }
         

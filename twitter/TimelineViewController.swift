@@ -8,11 +8,14 @@
 
 import UIKit
 
-class TimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class TimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
     var tweets: [Tweet]!
     var tappedUser: User?
+    var characterCount = 140
     
+    @IBOutlet weak var submitTweetButton: UIButton!
+    @IBOutlet weak var characterCountLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var composeTweetView: UIView!
     @IBOutlet weak var tweetTextField: UITextView!
@@ -26,6 +29,8 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.delegate = self
         tableView.dataSource = self
         
+        tweetTextField.delegate = self
+        
         composeTweetView.hidden = true
         
         loadTweets()
@@ -38,25 +43,10 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             
             print("retweet notification received in view did load")
             if let retweetedTweet = notification.object as? Tweet {
-                print("got retweeted tweet")
+                print("got retweeted tweet: \(retweetedTweet)")
                 self.tweets.append(retweetedTweet)
             }
             self.tableView.reloadData()
-
-            /*
-            let retweet = notification.object as? Tweet
-            if let retweet = retweet {
-                var index = 0
-                for tweet in self.tweets {
-                    if tweet.idString == retweet.idString {
-                        self.tweets[index] = retweet
-                        self.tableView.reloadData()
-                        print("tweet: \(tweet)")
-                        print("retweet: \(retweet)")
-                    }
-                    index = index + 1
-                }
-            }*/
         }
         
         NSNotificationCenter.defaultCenter().addObserverForName(Tweet.unRetweetNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (notification: NSNotification) in
@@ -86,6 +76,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
         NSNotificationCenter.defaultCenter().addObserverForName(TimelineTableViewCell.profileImageTappedNotification, object: nil, queue: NSOperationQueue.mainQueue()) { (notification: NSNotification) in
             
             self.tappedUser = notification.object as? User
+            
             self.performSegueWithIdentifier("TimelineToProfileSegue", sender: nil)
         }
     }
@@ -147,27 +138,55 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
     @IBAction func onSubmitTweetButton(sender: AnyObject) {
         print("submit tweet!")
         
-        if let tweetTextAsString = tweetTextField.text {
-            if let tweetTextAsUrlString = tweetTextAsString.stringByAddingPercentEncodingForRFC3986() {
-                print("tweetTextAsUrlString: \(tweetTextAsUrlString)")
-                TwitterClient.sharedInstance.postTweet(tweetTextAsUrlString, success: {
-                    print("success")
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(User.userPostedTweetNotification, object: nil)
-                    
-                    }, failure: { (error: NSError) in
-                        print(error.localizedDescription)
-                })
+        if characterCount >= 0 {
+            if let tweetTextAsString = tweetTextField.text {
+                if let tweetTextAsUrlString = tweetTextAsString.stringByAddingPercentEncodingForRFC3986() {
+                    print("tweetTextAsUrlString: \(tweetTextAsUrlString)")
+                    TwitterClient.sharedInstance.postTweet(tweetTextAsUrlString, success: {
+                        print("success")
+                        
+                        NSNotificationCenter.defaultCenter().postNotificationName(User.userPostedTweetNotification, object: nil)
+                        
+                        }, failure: { (error: NSError) in
+                            print(error.localizedDescription)
+                    })
+                }
             }
+        } else {
+            submitTweetButton.enabled = false
+            print("character limit exceeded")
         }
         
         composeTweetView.hidden = true
+    }
+    
+    func textViewDidChange(textView: UITextView) {
+        let tweetText = tweetTextField.text
+        let count = tweetText.characters.count
+        if count > 140 {
+            submitTweetButton.enabled = false
+            print("character limit exceeded")
+        } else {
+            submitTweetButton.enabled = true
+            characterCount = 140 - count
+            characterCountLabel.text = "\(characterCount)"
+        }
     }
     
     @IBAction func onTap(sender: UITapGestureRecognizer) {
         print("tapped")
         composeTweetView.hidden = true
     }
+//    
+//    func textView(textView: UITextView, shouldChangeCharactersInRange range: NSRange, replacementText text: String) -> Bool {
+//        let newLength = tweetTextField.text.utf16.count + String().utf16.count - range.length
+//        if newLength <= 14 {
+//            self.characterCountLabel.text = "\(140 - newLength)"
+//            return true
+//        } else {
+//            return false
+//        }
+//    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "TimelineToDetailSegue" {
@@ -179,6 +198,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             let detailViewController = segue.destinationViewController as! DetailViewController
             
             detailViewController.tweet = tweet
+            
         }
         if segue.identifier == "TimelineToProfileSegue" {
             let profileViewController = segue.destinationViewController as! ProfileViewController
@@ -188,6 +208,7 @@ class TimelineViewController: UIViewController, UITableViewDelegate, UITableView
             } else {
                 profileViewController.userIsCurrentUser = false
             }
+            profileViewController.comingFromSegue = true
             
         }
     }

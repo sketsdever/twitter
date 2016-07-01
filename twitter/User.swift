@@ -19,9 +19,11 @@ class User: NSObject {
     var followingCount: Int?
     var likesCount: Int?
     var tweetsCount: Int?
+    var bannerUrl: NSURL?
     
     static let userDidLogOutNotification = "UserDidLogOutNotification"
     static let userPostedTweetNotification = "UserPostedTweetNotification"
+    static let userPostedReplyNotification = "UserPostedReplyNotification"
     
     init(dictionary: NSDictionary) {
         
@@ -39,6 +41,13 @@ class User: NSObject {
         if let profileUrlString = profileUrlString {
             profileUrl = NSURL(string: profileUrlString)
         }
+        
+        let bannerUrlString = dictionary["profile_banner_url"] as? String
+        if let bannerUrlString = bannerUrlString {
+            bannerUrl = NSURL(string: bannerUrlString)
+        }
+        
+        
     }
     
     static var _currentUser: User?
