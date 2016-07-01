@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Login View Controller-->
@@ -19,13 +18,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1" text="TwitterClient" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="04V-Di-eIE">
-                                <rect key="frame" x="84" y="196" width="245.5" height="56.5"/>
+                                <rect key="frame" x="84" y="197" width="245.5" height="56.5"/>
                                 <fontDescription key="fontDescription" name="Cochin-Italic" family="Cochin" pointSize="50"/>
                                 <color key="textColor" red="0.16417502586155797" green="0.6358776271047355" blue="0.93719322643979053" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="100" image="twitter_bird" translatesAutoresizingMaskIntoConstraints="NO" id="fNc-8l-n2j">
-                                <rect key="frame" x="185" y="343" width="44" height="48"/>
+                                <rect key="frame" x="185" y="344" width="44" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="1sH-KI-WiT"/>
                                     <constraint firstAttribute="height" constant="48" id="5fj-gt-5Gw"/>
@@ -38,7 +37,7 @@
                                 </variation>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="300" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jay-24-EUs">
-                                <rect key="frame" x="186" y="381" width="42" height="30"/>
+                                <rect key="frame" x="186" y="382" width="42" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Log in">
                                     <color key="titleColor" red="0.16417502589999999" green="0.63587762709999995" blue="0.93719322640000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -50,20 +49,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Jay-24-EUs" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="69o-aL-Vo7"/>
-                            <constraint firstItem="fNc-8l-n2j" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8gf-N5-8lH"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="fNc-8l-n2j" secondAttribute="trailing" priority="750" constant="165" id="AiI-Zk-tmt"/>
-                            <constraint firstItem="04V-Di-eIE" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="HQV-Xy-5UW"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" relation="lessThanOrEqual" secondItem="Jay-24-EUs" secondAttribute="bottom" constant="325" id="gCh-b9-yFQ"/>
-                            <constraint firstItem="Jay-24-EUs" firstAttribute="top" secondItem="fNc-8l-n2j" secondAttribute="bottom" constant="-10" id="gdi-t8-OfR"/>
-                            <constraint firstItem="04V-Di-eIE" firstAttribute="top" relation="lessThanOrEqual" secondItem="y3c-jy-aDJ" secondAttribute="bottom" priority="1" constant="175" id="mT5-ZQ-rPn"/>
-                            <constraint firstItem="fNc-8l-n2j" firstAttribute="top" relation="lessThanOrEqual" secondItem="04V-Di-eIE" secondAttribute="bottom" priority="100" constant="90" id="tP2-MS-bja"/>
+                            <constraint firstItem="Jay-24-EUs" firstAttribute="top" secondItem="fNc-8l-n2j" secondAttribute="bottom" constant="-10" id="69G-sV-FE0"/>
+                            <constraint firstItem="fNc-8l-n2j" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="LkA-72-uL2"/>
+                            <constraint firstItem="Jay-24-EUs" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PdX-3m-tjQ"/>
+                            <constraint firstItem="04V-Di-eIE" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="p0H-JI-VOH"/>
+                            <constraint firstItem="fNc-8l-n2j" firstAttribute="top" secondItem="04V-Di-eIE" secondAttribute="bottom" constant="90.5" id="rSa-GW-zYM"/>
+                            <constraint firstItem="fNc-8l-n2j" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="t2G-IO-Ih4"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="AiI-Zk-tmt"/>
-                            </mask>
-                        </variation>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>

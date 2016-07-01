@@ -14,14 +14,14 @@ The following **required** functionality is completed:
 - [1/2] In the home timeline, user can view tweet with the user profile picture, username, tweet text, and timestamp.
 - [x] User can pull to refresh.
 - [x] User should display the relative timestamp for each tweet "8m", "7h"
-- [1/2] Retweeting and favoriting should increment the retweet and favorite count.
-- [1/2] User can tap on a tweet to view it, with controls to retweet, favorite, and reply.
+- [x] Retweeting and favoriting should increment the retweet and favorite count.
+- [x] User can tap on a tweet to view it, with controls to retweet, favorite, and reply.
 - [x] User can compose a new tweet by tapping on a compose button.
 - [x] User can tap the profile image in any tweet to see another user's profile
 - [x] Contains the user header view: picture and tagline
 - [x] Contains a section with the users basic stats: # tweets, # following, # followers
 - [x] Profile view should include that user's timeline
-- [ ] User can navigate to view their own profile
+- [x] User can navigate to view their own profile
 - [x] Contains the user header view: picture and tagline
 - [x] Contains a section with the users basic stats: # tweets, # following, # followers
 
@@ -29,7 +29,7 @@ The following **optional** features are implemented:
 
 - [ ] User can load more tweets once they reach the bottom of the feed using infinite loading similar to the actual Twitter client.
 - [x] User should be able to unretweet and unfavorite and should decrement the retweet and favorite count.
-- [ ] When composing, you should have a countdown in the upper right for the tweet limit.
+- [x] When composing, you should have a countdown in the upper right for the tweet limit.
 - [ ] After creating a new tweet, a user should be able to view it in the timeline immediately without refetching the timeline from the network.
 - [x] User can reply to any tweet, and replies should be prefixed with the username and the reply_id should be set when posting the tweet
 - [ ] Links in tweets are clickable
@@ -38,7 +38,8 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] User can view a feed of replies in the detail view for a post
+- [x] User can reply to a tweet and their response will be encoded with the correct @username format and incorporated into the feed.
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
