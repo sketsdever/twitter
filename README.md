@@ -40,11 +40,12 @@ The following **additional** features are implemented:
 
 - [x] User can view a feed of replies in the detail view for a post
 - [x] User can reply to a tweet and their response will be encoded with the correct @username format and incorporated into the feed.
+- [x] Compose tweet is pop-up view on top of main feed, doesn't require navigation
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. Auto-layout
+2. Navigation using animations rather than tab/nav bars and buttons
 
 ## Video Walkthrough
 
@@ -54,19 +55,19 @@ Here's a walkthrough of implemented user stories:
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
-## Notes
-
-Describe any challenges encountered while building the app.
 
 ## Credits
 
 List an 3rd party libraries, icons, graphics, or other assets you used in your app.
 
 - [AFNetworking](https://github.com/AFNetworking/AFNetworking) - networking task library
+- [Twitter Brand Resources](https://dev.twitter.com/overview/general/image-resources) - twitter icons
+- User by Umar Irshad from the Noun Project
+- Home by Chris Penny from the Noun Project
 
 ## License
 
-Copyright [yyyy] [name of copyright owner]
+Copyright 2016 Shea Ketsdever
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
