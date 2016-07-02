@@ -51,6 +51,8 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 See link for walkthrough of implemented user stories: http://i.imgur.com/kg2XqY0.mp4
 
+Autolayout for other screen sizes like 5s (see link): http://i.imgur.com/w9s50DY.png
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 
